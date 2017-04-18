@@ -4,6 +4,16 @@
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
 
+#include "SemiconductorMaterial.h"
+#include "OhmicContact.h"
+#include "ScaledDiffusion.h"
+#include "QuasiFermiLevel.h"
+#include "CarrierTransport.h"
+#include "SpaceCharge.h"
+#include "IntrinsicCarriers.h"
+#include "SemiconductorUserObject.h"
+#include "CarrierTransportBC.h"
+
 template<>
 InputParameters validParams<CraneApp>()
 {
@@ -40,6 +50,24 @@ extern "C" void CraneApp__registerObjects(Factory & factory) { CraneApp::registe
 void
 CraneApp::registerObjects(Factory & factory)
 {
+  // Materials
+  registerMaterial(SemiconductorMaterial);
+
+  // Boundary conditions
+  registerBoundaryCondition(OhmicContact);
+  registerBoundaryCondition(CarrierTransportBC);
+
+  // Kernels
+  registerKernel(ScaledDiffusion);
+  registerKernel(CarrierTransport);
+  registerKernel(SpaceCharge);
+
+  // Aux Kernels
+  registerAuxKernel(QuasiFermiLevel);
+  registerAuxKernel(IntrinsicCarriers);
+
+  // User objects
+  registerUserObject(SemiconductorUserObject);
 }
 
 // External entry point for dynamic syntax association
